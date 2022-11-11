@@ -1,4 +1,4 @@
-3:24:12
+4:18:13
 
 docker run -v %cd%\:/app:ro -v /app/node_modules -p 3000:4000 -d --env-file ./.env --name node-app node-app-image
 

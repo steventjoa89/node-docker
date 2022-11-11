@@ -19,6 +19,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build -V 
 
 PROD MODE:
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build node-app => rebuild only node-app
 
 SCALE-UP:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2

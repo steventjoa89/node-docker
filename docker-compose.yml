@@ -10,6 +10,7 @@ services:
 
   node-app:
     build: .
+    image: steventjoa/node-app
     environment:
       - PORT=3000
     depends_on:

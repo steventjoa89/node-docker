@@ -19,7 +19,8 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build -V 
 
 PROD MODE:
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build node-app => rebuild only node-app
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app => rebuild only node-app
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps --force-recreate node-app => rebuild only node-app and forcing rebuild even with no changes
 
 SCALE-UP:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2
@@ -34,3 +35,14 @@ docker inspect <container-name>
 docker logs <container-name>
 
 docker network inspect node-docker_default
+
+
+PUSH TO DOCKER-HUB:
+- LOGIN DOCKER CLI:
+docker login
+
+- RENAME IMAGE SO IT CAN BE PUSHED
+docker image tag node-docker_node-app steventjoa/node-app
+
+- push to docker hub
+docker push steventjoa/node-app

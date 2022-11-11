@@ -18,9 +18,11 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build => 
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build -V => to rebuild and replace the volume (including node modules)
 
 PROD MODE:
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps node-app => rebuild only node-app
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --no-deps --force-recreate node-app => rebuild only node-app and forcing rebuild even with no changes
+
 
 SCALE-UP:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale node-app=2
@@ -46,3 +48,26 @@ docker image tag node-docker_node-app steventjoa/node-app
 
 - push to docker hub
 docker push steventjoa/node-app
+
+BUILDING IMAGE FOR PROD (TO PUSH INTO HUB):
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml build node-app => only build node-app service
+
+PUSH BUILD PROD IMAGE INTO DOCKER HUB:
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml push
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml push node-app => only push node-app service
+
+PULL IMAGE FROM HUB:
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull
+
+
+
+To set an images to prod mode: => also can be used with <app-name-boleh-ada-boleh-engga>
+1. build the image => docker-compose -f docker-compose.yml -f docker-compose.prod.yml build <app-name-boleh-ada-boleh-engga>
+2. push to docker hub => docker-compose -f docker-compose.yml -f docker-compose.prod.yml push <app-name-boleh-ada-boleh-engga>
+3. pull image from hub from server => docker-compose -f docker-compose.yml -f docker-compose.prod.yml pull <app-name-boleh-ada-boleh-engga>
+4. make it run => docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d <app-name-boleh-ada-boleh-engga>
+
+
+==> WATCHTOWER (AUTOMATE DEPLOY BY PULLING PERIODEICALLY)
+docker run -d --name watchtower -e WATCHTOWER_TRACE=true -e WATCHTOWER_DEBUG=true -e WATCHTOWER_POLL_INTERVAL=50 -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower node-docker_node-app_1
